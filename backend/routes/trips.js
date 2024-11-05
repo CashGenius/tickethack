@@ -16,17 +16,29 @@ router.get('/displayAllTrips', function(req, res, next) {
 router.get('/findTrips', function(req, res, next) {
     const departure = req.body.departure
     const arrival = req.body.arrival
-    const date = moment(req.body.date,'DD-MM-YYYY').format('L')
-    console.log(date)
-    Trip.find({departure: departure, arrival: arrival})
-    .then(data => {
-        let result = []
-        for (let trip of data){
-            if (moment(trip.date).format('L') == date)
-            result.push(trip)
-        }
-      res.json({trips : result})
-    })
-  });
+    let date = req.body.date
+    if (date !== "" && date !== undefined && date !== null){
+        date = moment(req.body.date,'DD-MM-YYYY').format('L')
+    } else {
+        return res.json({result: false, error: "Missing date"})
+    }
+    if (departure && arrival && date){
+        Trip.find({departure: departure, arrival: arrival})
+        .then(data => {
+            let result = []
+            for (let trip of data){
+                if (moment(trip.date).format('L') == date)
+                result.push(trip)
+            }
+            if (result.length > 0){
+                res.json({trips : result})
+            } else {
+                res.json({ressult : false, error: "No trip found"})
+            }
+        })
+    } else {
+        return res.json({result: false, error: "Missing or empty body arguments"})
+    }
+});
 
 module.exports = router;
