@@ -22,8 +22,9 @@ router.get('/findTrips', function(req, res, next) {
     } else {
         return res.json({result: false, error: "Missing date"})
     }
+    console.log(date)
     if (departure && arrival && date){
-        Trip.find({departure: departure, arrival: arrival})
+        Trip.find({departure: new RegExp(`^${departure}$`,'i'), arrival: new RegExp(`^${arrival}$`,'i')})
         .then(data => {
             let result = []
             for (let trip of data){
