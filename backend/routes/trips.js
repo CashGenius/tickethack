@@ -13,6 +13,7 @@ router.get('/displayAllTrips', function(req, res, next) {
   })
 });
 
+// Effectuer une recherche dans la BDD trips selon la ville de départ / d'arrivée et la date souhaitée
 router.get('/findTrips', function(req, res, next) {
     const departure = req.body.departure
     const arrival = req.body.arrival
